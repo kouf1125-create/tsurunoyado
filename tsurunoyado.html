@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>つるのやど｜富士山を望む一日一組の宿</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Serif+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --warm: #8b6914;
+    --gold: #c9a84c;
+    --cream: #f5f0e8;
+    --parchment: #ede5d0;
+    --mist: #d6cfc4;
+    --red: #8c2b1b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Serif JP', serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── ナビ ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--mist);
+  }
+  .nav-logo {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.3rem; font-weight: 700; letter-spacing: 0.2em;
+    color: var(--ink); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.8rem; letter-spacing: 0.15em;
+    color: var(--ink); text-decoration: none;
+    position: relative; padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1px; background: var(--gold);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ── ヒーロー ── */
+  #hero {
+    height: 100vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(26,18,8,0.35) 0%, rgba(26,18,8,0.1) 40%, rgba(26,18,8,0.5) 100%),
+      linear-gradient(135deg, #8fa89e 0%, #b5c5ba 25%, #d4ddd7 50%, #c8c0a8 75%, #a89880 100%);
+  }
+  /* 富士山シルエット */
+  .fuji {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 900px;
+  }
+  .fuji svg { width: 100%; height: auto; }
+  /* 雲 */
+  .cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50px;
+    filter: blur(12px);
+    animation: drift linear infinite;
+  }
+  .cloud-1 { width: 200px; height: 40px; top: 30%; left: -220px; animation-duration: 28s; }
+  .cloud-2 { width: 140px; height: 30px; top: 45%; left: -160px; animation-duration: 40s; animation-delay: -12s; }
+  .cloud-3 { width: 260px; height: 50px; top: 22%; left: -280px; animation-duration: 35s; animation-delay: -8s; }
+  @keyframes drift { to { transform: translateX(110vw); } }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    text-align: center; color: white;
+    animation: fadeUp 1.4s ease both;
+  }
+  .hero-label {
+    font-size: 0.72rem; letter-spacing: 0.4em;
+    color: rgba(255,255,255,0.8); margin-bottom: 1.2rem;
+  }
+  .hero-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 700; letter-spacing: 0.25em;
+    line-height: 1.2; margin-bottom: 1.5rem;
+    text-shadow: 0 2px 30px rgba(0,0,0,0.4);
+  }
+  .hero-sub {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    letter-spacing: 0.25em; line-height: 2.2;
+    color: rgba(255,255,255,0.9);
+  }
+  .hero-divider {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0));
+    margin: 2rem auto;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── セクション共通 ── */
+  section { padding: 7rem 2rem; }
+  .section-label {
+    font-size: 0.7rem; letter-spacing: 0.45em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 600; letter-spacing: 0.15em;
+    line-height: 1.5; margin-bottom: 1.5rem;
+  }
+  .section-text {
+    font-size: 0.95rem; line-height: 2.4;
+    color: #4a3f2f; max-width: 520px;
+  }
+  .divider-gold {
+    width: 40px; height: 2px;
+    background: var(--gold);
+    margin: 1.5rem 0;
+  }
+
+  /* ── 宿の魅力 ── */
+  #charm {
+    background: var(--parchment);
+    position: relative; overflow: hidden;
+  }
+  #charm::before {
+    content: '鶴'; position: absolute;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 28rem; font-weight: 700;
+    color: rgba(139,105,20,0.04);
+    top: -4rem; right: -6rem; line-height: 1;
+    pointer-events: none;
+  }
+  .charm-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  .charm-cards {
+    display: flex; flex-direction: column; gap: 2rem;
+  }
+  .charm-card {
+    background: white;
+    border-left: 3px solid var(--gold);
+    box-shadow: 0 4px 24px rgba(26,18,8,0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+  }
+  .charm-card:hover {
+    transform: translateX(6px);
+    box-shadow: 0 8px 32px rgba(26,18,8,0.12);
+  }
+  .charm-card-body {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    padding: 1.8rem;
+  }
+  .charm-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .charm-card h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.05rem; letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+  .charm-card p { font-size: 0.85rem; line-height: 2; color: #5a4a35; }
+  .charm-photo {
+    width: 100%; height: 180px;
+    background: linear-gradient(135deg, var(--parchment), var(--mist));
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 0.5rem;
+    color: var(--warm); font-size: 0.75rem; letter-spacing: 0.2em;
+    border-top: 1px solid var(--mist);
+  }
+  .charm-photo span { font-size: 2rem; opacity: 0.5; }
+
+  /* ── 富士山景色 ── */
+  #view {
+    background: linear-gradient(160deg, #1a2830 0%, #2c3e45 40%, #1a2830 100%);
+    color: white; text-align: center; position: relative; overflow: hidden;
+  }
+  #view::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 80%, rgba(201,168,76,0.1) 0%, transparent 70%);
+  }
+  .view-inner { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+  #view .section-label { color: var(--gold); }
+  #view .section-title { color: white; margin: 0 auto 1.5rem; }
+  #view .divider-gold { margin: 1.5rem auto; }
+  #view .section-text { color: rgba(255,255,255,0.8); margin: 0 auto 3rem; }
+
+  /* 富士山イラスト（CSS） */
+  .fuji-illustration {
+    width: 100%; max-width: 500px; margin: 0 auto;
+    height: 200px; position: relative;
+  }
+  .fuji-mountain {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 250px solid transparent;
+    border-right: 250px solid transparent;
+    border-bottom: 180px solid rgba(255,255,255,0.12);
+  }
+  .fuji-snow {
+    position: absolute; bottom: 145px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 65px solid transparent;
+    border-right: 65px solid transparent;
+    border-bottom: 55px solid rgba(255,255,255,0.7);
+  }
+  .fuji-mist {
+    position: absolute; bottom: 20px; left: 0; right: 0; height: 60px;
+    background: linear-gradient(to top, rgba(44,62,69,0.9), transparent);
+  }
+  .fuji-stars {
+    position: absolute; top: 0; left: 0; right: 0; height: 120px;
+  }
+  .star {
+    position: absolute; width: 2px; height: 2px;
+    background: white; border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; } 50% { opacity: 1; }
+  }
+
+  /* ── アクセス ── */
+  #access { background: white; }
+  .access-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: start;
+  }
+  .access-items { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+  .access-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--mist);
+  }
+  .access-item:last-child { border-bottom: none; }
+  .access-icon {
+    width: 40px; height: 40px;
+    background: var(--parchment); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .access-item h4 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 0.9rem; letter-spacing: 0.1em;
+    margin-bottom: 0.3rem; color: var(--warm);
+  }
+  .access-item p { font-size: 0.85rem; line-height: 1.9; color: #5a4a35; }
+  .map-placeholder {
+    background: var(--parchment);
+    border: 1px solid var(--mist);
+    border-radius: 2px;
+    height: 320px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 1rem;
+    color: var(--warm); font-size: 0.85rem; letter-spacing: 0.1em;
+  }
+  .map-placeholder span { font-size: 3rem; }
+
+  /* ── 料金 ── */
+  #price { background: white; text-align: center; }
+  .price-inner { max-width: 800px; margin: 0 auto; }
+  #price .section-text { margin: 0 auto; }
+  .price-cards {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2rem; max-width: 680px; margin: 0 auto;
+    align-items: stretch;
+  }
+  .price-card {
+    background: var(--parchment);
+    border: 1px solid var(--mist);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    display: flex; flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .price-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(26,18,8,0.1);
+  }
+  .price-card-featured {
+    background: var(--ink);
+    border-color: var(--gold);
+    padding-top: 3.5rem;
+  }
+  .price-badge {
+    position: absolute; top: 0; left: 0; right: 0;
+    background: var(--gold); color: var(--ink);
+    font-size: 0.7rem; letter-spacing: 0.25em;
+    padding: 0.4rem 1rem;
+    font-family: 'Shippori Mincho', serif;
+    text-align: center;
+  }
+  .price-type-label {
+    font-size: 0.68rem; letter-spacing: 0.3em;
+    color: var(--gold); margin-bottom: 0.4rem;
+  }
+  .price-card-featured .price-type-label { color: var(--gold); }
+  .price-type {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.3rem; letter-spacing: 0.2em;
+    color: var(--ink); margin-bottom: 1.2rem;
+  }
+  .price-card-featured .price-type { color: white; }
+  .price-amount {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 2rem; color: var(--warm);
+    margin-bottom: 1.5rem; letter-spacing: 0.05em;
+    line-height: 1.3;
+  }
+  .price-card-featured .price-amount { color: var(--gold); }
+  .price-amount small {
+    display: block;
+    font-size: 0.75rem; color: #8a7a5a; letter-spacing: 0.1em;
+    margin-top: 0.2rem;
+  }
+  .price-card-featured .price-amount small { color: rgba(255,255,255,0.45); }
+  .price-includes {
+    list-style: none; text-align: left;
+    display: flex; flex-direction: column; gap: 0.65rem;
+    margin-top: auto;
+  }
+  .price-includes li {
+    font-size: 0.82rem; color: #5a4a35; letter-spacing: 0.05em;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .price-includes li:last-child { border-bottom: none; padding-bottom: 0; }
+  .price-card-featured .price-includes li {
+    color: rgba(255,255,255,0.75);
+    border-bottom-color: rgba(255,255,255,0.08);
+  }
+  .price-note {
+    font-size: 0.78rem; color: #8a7a5a;
+    letter-spacing: 0.1em; margin-top: 2rem;
+  }
+
+  /* ── 客室 ── */
+  #rooms { background: var(--parchment); }
+  .rooms-inner { max-width: 1100px; margin: 0 auto; }
+  .rooms-header { text-align: center; margin-bottom: 4rem; }
+  .rooms-header .divider-gold { margin: 1.5rem auto; }
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .room-card {
+    background: white;
+    box-shadow: 0 4px 20px rgba(26,18,8,0.08);
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+  .room-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(26,18,8,0.15);
+  }
+  .room-img {
+    width: 100%; height: 200px;
+    background: linear-gradient(135deg, var(--mist), var(--parchment));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--warm); font-size: 0.8rem; letter-spacing: 0.2em;
+    flex-direction: column; gap: 0.5rem;
+  }
+  .room-img span { font-size: 2.5rem; }
+  .room-info { padding: 1.5rem; }
+  .room-info h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1rem; letter-spacing: 0.15em;
+    margin-bottom: 0.7rem;
+  }
+  .room-info p { font-size: 0.82rem; line-height: 2; color: #5a4a35; }
+  .room-tag {
+    display: inline-block;
+    font-size: 0.7rem; letter-spacing: 0.15em;
+    color: var(--gold); border: 1px solid var(--gold);
+    padding: 0.2rem 0.6rem; margin-top: 1rem;
+  }
+
+  /* ── Q&A ── */
+  #qa { background: white; }
+  .qa-inner { max-width: 800px; margin: 0 auto; }
+  .qa-list { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
+  .qa-item {
+    border-top: 1px solid var(--mist);
+    overflow: hidden;
+  }
+  .qa-item:last-child { border-bottom: 1px solid var(--mist); }
+  .qa-question {
+    width: 100%; background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 1.5rem;
+    padding: 1.5rem 0; text-align: left;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 0.95rem; color: var(--ink); letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .qa-question:hover { color: var(--warm); }
+  .qa-q {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--gold); flex-shrink: 0;
+  }
+  .qa-toggle {
+    margin-left: auto; font-size: 1.2rem;
+    color: var(--gold); transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .qa-item.open .qa-toggle { transform: rotate(45deg); }
+  .qa-answer {
+    display: grid; grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+  .qa-item.open .qa-answer { grid-template-rows: 1fr; }
+  .qa-answer-inner {
+    overflow: hidden;
+    padding: 0 0 0 2.8rem;
+  }
+  .qa-answer-text {
+    padding-bottom: 1.5rem;
+    font-size: 0.88rem; line-height: 2.4;
+    color: #5a4a35; border-left: 2px solid var(--parchment);
+    padding-left: 1rem;
+  }
+
+  /* ── お問い合わせ ── */
+  #contact {
+    background: var(--ink); color: white;
+  }
+  .contact-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+  #contact .section-label { color: var(--gold); }
+  #contact .section-title { color: white; margin: 0 auto 0.5rem; }
+  #contact .divider-gold { margin: 1.5rem auto; }
+  .contact-tel {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    letter-spacing: 0.2em; color: var(--gold);
+    margin: 2.5rem 0 0.5rem;
+  }
+  .contact-tel-note { font-size: 0.8rem; color: rgba(255,255,255,0.5); letter-spacing: 0.2em; margin-bottom: 3rem; }
+  .contact-divider {
+    width: 1px; height: 40px;
+    background: rgba(255,255,255,0.2);
+    margin: 0 auto 3rem;
+  }
+  .contact-form {
+    display: grid; gap: 1.5rem; max-width: 600px; margin: 0 auto;
+    text-align: left;
+  }
+  .form-group label {
+    display: block; font-size: 0.78rem; letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.6); margin-bottom: 0.5rem;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%; padding: 0.9rem 1.2rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white; font-family: 'Noto Serif JP', serif;
+    font-size: 0.9rem; letter-spacing: 0.05em;
+    outline: none; transition: border-color 0.2s;
+    border-radius: 0;
+    -webkit-appearance: none;
+  }
+  .form-group select option { background: var(--ink); }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--gold);
+  }
+  .form-group textarea { height: 140px; resize: vertical; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .submit-btn {
+    width: 100%; padding: 1.1rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold); font-family: 'Shippori Mincho', serif;
+    font-size: 0.9rem; letter-spacing: 0.3em;
+    cursor: pointer; transition: all 0.3s ease;
+    margin-top: 0.5rem;
+  }
+  .submit-btn:hover {
+    background: var(--gold); color: var(--ink);
+  }
+
+  /* ── フッター ── */
+  footer {
+    background: #0e0c08; color: rgba(255,255,255,0.4);
+    text-align: center; padding: 2.5rem;
+    font-size: 0.75rem; letter-spacing: 0.2em;
+  }
+  footer .footer-logo {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.1rem; color: rgba(255,255,255,0.7);
+    letter-spacing: 0.3em; margin-bottom: 0.8rem;
+  }
+
+  /* ── スクロールアニメ ── */
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+
+  /* ── レスポンシブ ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .charm-grid, .access-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .rooms-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    #charm::before { font-size: 14rem; }
+
+    /* 料金カードをスマホで縦並びに */
+    .price-cards {
+      grid-template-columns: 1fr;
+      max-width: 380px;
+    }
+    .price-card-featured {
+      order: -1; /* 人気プランを上に */
+    }
+    .price-amount { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ナビ -->
+<nav>
+  <a href="#hero" class="nav-logo">鶴の宿</a>
+  <ul class="nav-links">
+    <li><a href="#charm">宿の魅力</a></li>
+    <li><a href="#view">富士の眺め</a></li>
+    <li><a href="#price">料金</a></li>
+    <li><a href="#rooms">客室</a></li>
+    <li><a href="#access">アクセス</a></li>
+    <li><a href="#qa">Q&A</a></li>
+    <li><a href="#contact">お問い合わせ</a></li>
+  </ul>
+</nav>
+
+<!-- ヒーロー -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="cloud cloud-1"></div>
+  <div class="cloud cloud-2"></div>
+  <div class="cloud cloud-3"></div>
+  <div class="fuji">
+    <svg viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+      <polygon points="600,40 350,380 850,380" fill="rgba(200,215,210,0.4)"/>
+      <polygon points="600,40 520,180 680,180" fill="rgba(255,255,255,0.6)"/>
+      <rect x="0" y="320" width="1200" height="80" fill="rgba(26,18,8,0.3)"/>
+    </svg>
+  </div>
+  <div class="hero-content">
+    <p class="hero-label">TSURUNOYADO ─ 一日一組</p>
+    <h1 class="hero-title">鶴の宿</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">富士を仰ぎ、静かな時を過ごす<br>あなただけのための宿</p>
+  </div>
+</section>
+
+<!-- 宿の魅力 -->
+<section id="charm">
+  <div class="charm-grid">
+    <div class="reveal">
+      <p class="section-label">Our Charm</p>
+      <h2 class="section-title">この宿だからこそ<br>感じられる、静けさ</h2>
+      <div class="divider-gold"></div>
+      <p class="section-text">一日一組限定だからこそ叶う、完全なるプライベート空間。スタッフ全員があなたのためだけに動き、旅の記憶に残る特別なひとときをお届けします。</p>
+    </div>
+    <div class="charm-cards">
+      <div class="charm-card reveal reveal-delay-1">
+        <div class="charm-card-body">
+          <div class="charm-icon">🏮</div>
+          <div>
+            <h3>完全プライベートの滞在</h3>
+            <p>一日一組限定。他のお客様を気にすることなく、宿全体を贅沢にお使いいただけます。</p>
+          </div>
+        </div>
+        <div class="charm-photo"><span>🏮</span>写真準備中</div>
+      </div>
+      <div class="charm-card reveal reveal-delay-2">
+        <div class="charm-card-body">
+          <div class="charm-icon">🍱</div>
+          <div>
+            <h3>地産地消の会席料理</h3>
+            <p>地元の旬の食材を活かした会席料理を、お部屋でゆっくりとお楽しみください。</p>
+          </div>
+        </div>
+        <div class="charm-photo"><span>🍱</span>写真準備中</div>
+      </div>
+      <div class="charm-card reveal reveal-delay-3">
+        <div class="charm-card-body">
+          <div class="charm-icon">♨️</div>
+          <div>
+            <h3>富士山を望む貸切温泉</h3>
+            <p>天然温泉の貸切風呂から、四季折々の富士山をひとり占め。朝・夜いつでもご利用可能です。</p>
+          </div>
+        </div>
+        <div class="charm-photo"><span>♨️</span>写真準備中</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 富士山景色 -->
+<section id="view">
+  <div class="view-inner">
+    <p class="section-label reveal">Mt. Fuji View</p>
+    <h2 class="section-title reveal reveal-delay-1">窓を開ければ、<br>そこに富士山</h2>
+    <div class="divider-gold reveal reveal-delay-1"></div>
+    <p class="section-text reveal reveal-delay-2">標高900mの高台に位置する鶴の宿からは、富士山を正面に望む絶景が広がります。刻一刻と変わる表情──朝焼けに染まる山頂、雲海に浮かぶ稜線、星空に映える雄姿。どの瞬間も、ここでしか出会えない景色です。</p>
+    <div class="fuji-illustration reveal reveal-delay-3">
+      <div class="fuji-stars" id="stars"></div>
+      <div class="fuji-mountain"></div>
+      <div class="fuji-snow"></div>
+      <div class="fuji-mist"></div>
+    </div>
+  </div>
+</section>
+
+<!-- アクセス -->
+<section id="access">
+  <div class="access-grid">
+    <div>
+      <p class="section-label reveal">Access</p>
+      <h2 class="section-title reveal reveal-delay-1">都心から2時間、<br>非日常への旅</h2>
+      <div class="divider-gold reveal reveal-delay-1"></div>
+      <p class="section-text reveal reveal-delay-2">新幹線・高速道路いずれのアクセスも良好。東京からわずか2時間ほどで、静寂に包まれた別世界へとご案内します。</p>
+      <div class="access-items">
+        <div class="access-item reveal reveal-delay-1">
+          <div class="access-icon">🚅</div>
+          <div>
+            <h4>新幹線をご利用の場合</h4>
+            <p>東京駅 → 三島駅（新幹線 約45分）<br>三島駅 → 当館（送迎バス 約60分）</p>
+          </div>
+        </div>
+        <div class="access-item reveal reveal-delay-2">
+          <div class="access-icon">🚗</div>
+          <div>
+            <h4>お車をご利用の場合</h4>
+            <p>東名高速・御殿場ICより約30分<br>駐車場完備（無料）</p>
+          </div>
+        </div>
+        <div class="access-item reveal reveal-delay-3">
+          <div class="access-icon">🚌</div>
+          <div>
+            <h4>送迎サービス</h4>
+            <p>ご予約のお客様には三島駅より<br>無料送迎をご用意しております。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="map-placeholder reveal reveal-delay-2">
+      <span>🗺</span>
+      <p>地図を表示予定</p>
+    </div>
+  </div>
+</section>
+
+<!-- 料金 -->
+<section id="price">
+  <div class="price-inner">
+    <p class="section-label reveal">Price</p>
+    <h2 class="section-title reveal reveal-delay-1">ご宿泊料金</h2>
+    <div class="divider-gold reveal reveal-delay-1"></div>
+    <p class="section-text reveal reveal-delay-2" style="margin-bottom:3.5rem">料金はすべて1名あたり・税込の金額です。<br>2名以上でのご宿泊は、人数分の合計金額となります。</p>
+    <div class="price-cards reveal reveal-delay-2">
+      <div class="price-card">
+        <div class="price-card-header">
+          <p class="price-type-label">Room Only</p>
+          <h3 class="price-type">素泊まり</h3>
+        </div>
+        <div class="price-card-body">
+          <p class="price-amount">¥<span class="price-num">12,000</span><small>〜 / 1名</small></p>
+          <ul class="price-includes">
+            <li>✓ 客室ご利用</li>
+            <li>✓ 貸切温泉</li>
+            <li>✓ 無料駐車場</li>
+            <li>✓ 三島駅送迎</li>
+          </ul>
+        </div>
+      </div>
+      <div class="price-card price-card-featured">
+        <div class="price-badge">人気プラン</div>
+        <div class="price-card-header">
+          <p class="price-type-label">Dinner &amp; Breakfast</p>
+          <h3 class="price-type">夕朝食付き</h3>
+        </div>
+        <div class="price-card-body">
+          <p class="price-amount">¥<span class="price-num">16,000</span><small>〜 / 1名</small></p>
+          <ul class="price-includes">
+            <li>✓ 客室ご利用</li>
+            <li>✓ 貸切温泉</li>
+            <li>✓ 夕食（会席料理）</li>
+            <li>✓ 朝食</li>
+            <li>✓ 無料駐車場</li>
+            <li>✓ 三島駅送迎</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="price-note reveal">※料金は季節・人数により変動する場合がございます。詳細はお問い合わせください。</p>
+  </div>
+</section>
+
+<!-- 客室 -->
+<section id="rooms">
+  <div class="rooms-inner">
+    <div class="rooms-header">
+      <p class="section-label reveal">Rooms</p>
+      <h2 class="section-title reveal reveal-delay-1">凛とした静寂の中で、<br>くつろぎのひとときを</h2>
+      <div class="divider-gold reveal reveal-delay-1"></div>
+    </div>
+    <div class="rooms-grid">
+      <div class="room-card reveal">
+        <div class="room-img"><span>🛏</span>写真準備中</div>
+        <div class="room-info">
+          <h3>富士見の間</h3>
+          <p>富士山を正面に望む最上階の客室。大きな窓から広がる絶景と、静寂に包まれた特別な空間です。</p>
+          <span class="room-tag">富士山ビュー</span>
+        </div>
+      </div>
+      <div class="room-card reveal reveal-delay-1">
+        <div class="room-img"><span>🛁</span>写真準備中</div>
+        <div class="room-info">
+          <h3>湯音の間</h3>
+          <p>客室内に露天風呂を完備。温泉に浸かりながら四季の移ろいをお楽しみいただけます。</p>
+          <span class="room-tag">露天風呂付き</span>
+        </div>
+      </div>
+      <div class="room-card reveal reveal-delay-2">
+        <div class="room-img"><span>🌸</span>写真準備中</div>
+        <div class="room-info">
+          <h3>花結の間</h3>
+          <p>庭園に面した静かな客室。四季の花々が窓を彩り、心安らぐひとときをお届けします。</p>
+          <span class="room-tag">庭園ビュー</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Q&A -->
+<section id="qa">
+  <div class="qa-inner">
+    <p class="section-label reveal">FAQ</p>
+    <h2 class="section-title reveal reveal-delay-1">よくある<br>ご質問</h2>
+    <div class="divider-gold reveal reveal-delay-1"></div>
+    <div class="qa-list reveal reveal-delay-2">
+      <div class="qa-item">
+        <button class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q">Q</span>
+          チェックイン・チェックアウトの時間は？
+          <span class="qa-toggle">＋</span>
+        </button>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p class="qa-answer-text">チェックインは15:00〜18:00、チェックアウトは11:00となっております。ご希望がございましたら、お気軽にご相談ください。</p>
+          </div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q">Q</span>
+          食事のアレルギー対応はできますか？
+          <span class="qa-toggle">＋</span>
+        </button>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p class="qa-answer-text">はい、対応しております。ご予約の際にアレルギーの内容をご記載ください。内容によってはお断りする場合もございますが、できる限り対応いたします。</p>
+          </div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q">Q</span>
+          子どもも宿泊できますか？
+          <span class="qa-toggle">＋</span>
+        </button>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p class="qa-answer-text">小学生以上のお子様からご宿泊いただけます。未就学児のお子様はご遠慮いただいております。ご家族での思い出づくりに、ぜひお越しください。</p>
+          </div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q">Q</span>
+          キャンセルポリシーを教えてください
+          <span class="qa-toggle">＋</span>
+        </button>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p class="qa-answer-text">7日前まで：無料 / 3〜6日前：宿泊料金の30% / 前日：50% / 当日・無断キャンセル：100% のキャンセル料が発生します。</p>
+          </div>
+        </div>
+      </div>
+      <div class="qa-item">
+        <button class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q">Q</span>
+          駐車場はありますか？
+          <span class="qa-toggle">＋</span>
+        </button>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p class="qa-answer-text">はい、無料駐車場をご用意しております（3台まで）。大型車をお使いの場合は事前にご相談ください。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- お問い合わせ -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label reveal">Contact</p>
+    <h2 class="section-title reveal reveal-delay-1">ご予約・お問い合わせ</h2>
+    <div class="divider-gold reveal reveal-delay-1"></div>
+    <p class="section-text reveal reveal-delay-2" style="margin: 0 auto 0;">ご不明な点やご要望は、お電話またはメールフォームにてお気軽にどうぞ。</p>
+    <p class="contact-tel reveal reveal-delay-2">0555 - XX - XXXX</p>
+    <p class="contact-tel-note reveal">受付時間 9:00〜20:00（年中無休）</p>
+    <div class="contact-divider reveal"></div>
+    <form class="contact-form reveal reveal-delay-1" onsubmit="return false;">
+      <div class="form-row">
+        <div class="form-group">
+          <label>お名前 *</label>
+          <input type="text" placeholder="山田 花子">
+        </div>
+        <div class="form-group">
+          <label>メールアドレス *</label>
+          <input type="email" placeholder="example@mail.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>電話番号</label>
+          <input type="tel" placeholder="090-0000-0000">
+        </div>
+        <div class="form-group">
+          <label>お問い合わせ種別</label>
+          <select>
+            <option>ご予約について</option>
+            <option>アクセスについて</option>
+            <option>お食事について</option>
+            <option>その他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>メッセージ</label>
+        <textarea placeholder="ご希望・ご質問をお気軽にどうぞ"></textarea>
+      </div>
+      <button type="submit" class="submit-btn">送　信</button>
+    </form>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="footer-logo">鶴の宿</div>
+  <p>〒XXX-XXXX 静岡県○○市○○町XX-XX</p>
+  <p style="margin-top:0.5rem">© 2025 Tsurunoyado. All rights reserved.</p>
+</footer>
+
+<script>
+  // 星を生成
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 30; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.opacity = Math.random() * 0.5 + 0.2;
+    starsEl.appendChild(star);
+  }
+
+  // スクロールアニメ
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Q&Aアコーディオン
+  function toggleQA(btn) {
+    const item = btn.closest('.qa-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.qa-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
